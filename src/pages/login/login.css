@@ -1,0 +1,30 @@
+
+.login{
+    width:100%;
+    height:100%;
+    display: flex;
+    align-items: center;
+}
+.content{
+    width:100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap  ;
+}
+.username,.password,.btn{
+    width:80%;
+    height:40px;
+    border-radius:8px;
+    display: block;
+    margin:10px 0;
+    border: none;
+    text-align: center;
+    line-height: 40px;
+}
+.btn{
+    background: #1B9AF7;
+    color:#fff;
+}
+.btn:active {
+    background:#229ffd;
+}
