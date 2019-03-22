@@ -2,6 +2,7 @@ import React from 'react';
 import {Switch, Link,withRouter} from "react-router-dom"
 import { connect } from 'react-redux';
 import './index.css'
+
 class Index extends React.Component {
     constructor(props,context){
         super(props,context)
@@ -46,9 +47,9 @@ function mapDispatchToProps(dispatch) {
 	return {};
 }
 
-//封装传递state和dispatch
+// 封装传递state和dispatch
 var IndexReactRedux = connect(mapStateToProps,mapDispatchToProps)(Index);
 
 
 //导出组件
-export default withRouter(IndexReactRedux);
+export default IndexReactRedux;

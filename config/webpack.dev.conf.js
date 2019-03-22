@@ -3,6 +3,7 @@ let HtmlWebpackPlugin = require('html-webpack-plugin');
 let merge = require('webpack-merge');//合并配置
 let baseWebpackConfig = require('./webpack.base.conf');
 module.exports = merge(baseWebpackConfig,{
+    mode:"development",
     entry: {
         app: [
             'react-hot-loader/patch',
@@ -25,9 +26,13 @@ module.exports = merge(baseWebpackConfig,{
             }
         }),
         // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
-        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin(),
+        new webpack.NoEmitOnErrorsPlugin(),
+        // new webpack.ContextReplacementPlugin(
+        //     /angular(\\|\/)core/,
+        //     path.resolve(__dirname, './')
+        // ),
         // https://github.com/ampedandwired/html-webpack-plugin
         new HtmlWebpackPlugin({
             filename: 'index.html',

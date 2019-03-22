@@ -1,10 +1,10 @@
 module.exports = {
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx$/,
                 exclude: /node_modules/,
-                loader: 'bundle-loader?lazy&name=[name]!',
+                loader: 'bundle-loader',
             },
             {
                 test: /\.(js|jsx)$/,
@@ -12,13 +12,13 @@ module.exports = {
                 loader: 'babel-loader'
             },
             {
-                test: /\.css$/,
+                test: /\.(css|scss)$/,
                 exclude: /node_modules/,
-                loader: "style-loader!css-loader"
+                loader: "style-loader!css-loader!sass-loader"
             },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-                loader: 'url',
+                loader: 'url-loader',
                 query: {
                     limit: 100,
                     name: 'static/images/[name].[ext]'
@@ -32,5 +32,5 @@ module.exports = {
                 }
             }
         ]
-    },
+    }
 };
