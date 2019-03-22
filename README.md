@@ -1,5 +1,6 @@
 # react-router-redux
-react-router-redux 简单项目结构
+platform
+NOBOOK新版后台管理项目
 
 **在运行前请确保你的电脑上安装了node**
 
