@@ -1,6 +1,8 @@
-let webpack = require('webpack');//引入Webpack模块供我们调用，这里只能使用ES5语法，使用ES6语法会报错
-let HtmlWebpackPlugin = require('html-webpack-plugin');
-let merge = require('webpack-merge');//合并配置
+const webpack = require('webpack');//引入Webpack模块供我们调用，这里只能使用ES5语法，使用ES6语法会报错
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const merge = require('webpack-merge');//合并配置
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require("path");
 let baseWebpackConfig = require('./webpack.base.conf');
 module.exports = merge(baseWebpackConfig,{
     mode:"development",
@@ -12,28 +14,25 @@ module.exports = merge(baseWebpackConfig,{
             ]
     },
     output: {
-        path: __dirname + '/../build/',
-        publicPath: process.env.NODE_ENV === 'production' ? '/static/' : '/',
+        path: path.resolve(__dirname + '/../build/'),
+        publicPath: process.env.NODE_ENV === 'development' ? '/' : '',
         filename: 'static/js/[name].js',
-        chunkFilename: 'static/js/[name].[chunkhash].min.js'
+        chunkFilename: 'static/js/[id].[chunkhash].min.js'
     },
-    devtool: '#eval-source-map',
+    devtool: 'eval-source-map',
     plugins: [
-        // 设置变量
+        // 设置环境变量
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"development"'
             }
         }),
-        // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
+        new MiniCssExtractPlugin({
+            filename: 'static/css/[name].css',
+            chunkFilename: 'static/css/[name].[chunkhash].css',
+        }),
         new webpack.optimize.OccurrenceOrderPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
-        // new webpack.ContextReplacementPlugin(
-        //     /angular(\\|\/)core/,
-        //     path.resolve(__dirname, './')
-        // ),
-        // https://github.com/ampedandwired/html-webpack-plugin
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: 'index.html',

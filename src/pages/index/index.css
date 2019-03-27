@@ -1,6 +1,28 @@
-.title{
-    margin:0 auto;
-    padding:10px 0;
-    font-size:20px;
-    text-align: center;
+.logo,
+.logoSeize {
+    height: 40px;
+    width: 200px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.logo {
+    position: fixed;
+    left: 0;
+    top: 0;
+    /* background: url('../../static/images/nb_pc.png') */
+}
+
+.trigger {
+    font-size: 18px;
+    line-height: 40px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color .3s;
+    color: #fff;
+}
+
+.trigger:hover {
+    color: #1890ff;
 }

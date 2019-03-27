@@ -1,12 +1,13 @@
-let webpack = require('webpack');//引入Webpack模块供我们调用，这里只能使用ES5语法，使用ES6语法会报错
-let HtmlWebpackPlugin = require('html-webpack-plugin');
-let merge = require('webpack-merge');//合并配置
-let MiniCssExtractPlugin = require('mini-css-extract-plugin');
-let CleanWebpackPlugin = require('clean-webpack-plugin');
-let path = require('path')
+const webpack = require('webpack'); //引入Webpack模块供我们调用，这里只能使用ES5语法，使用ES6语法会报错
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const merge = require('webpack-merge'); //合并配置
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 let baseWebpackConfig = require('./webpack.base.conf');
-module.exports = merge(baseWebpackConfig,{
-    mode:"production",
+module.exports = merge(baseWebpackConfig, {
+    mode: "production",
     entry: {
         app: './app.js'
     },
@@ -16,7 +17,7 @@ module.exports = merge(baseWebpackConfig,{
         chunkFilename: 'static/js/[name].[chunkhash].min.js'
     },
     plugins: [
-        // 设置变量
+        // 设置环境变量
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"production"'
@@ -26,29 +27,35 @@ module.exports = merge(baseWebpackConfig,{
         new webpack.optimize.OccurrenceOrderPlugin(),
         // 抽取css样式
         new MiniCssExtractPlugin({
-            filename: '[name].css',
-            chunkFilename: '[id].css',
+            filename: 'static/css/[name].css',
+            chunkFilename: 'static/css/[name].[chunkhash].css',
         }),
-
+        new CopyWebpackPlugin([{
+            from: path.resolve(__dirname, '../src/static/icons'),
+            to: path.resolve(__dirname, '../build/static/icons')
+        }]),
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: 'index.html',
-            title:'react',
+            title: 'react',
             inject: true,
             chunksSortMode: 'dependency'
         }),
         new CleanWebpackPlugin(
-            [__dirname+'/../build/static'],　 //匹配删除的文件
+            [__dirname + '/../build/static'], //匹配删除的文件
             {
-                root: __dirname+'/../',       　　　　　　　　　　//根目录
-                verbose:  true,        　　　　　　　　　　//开启在控制台输出信息
-                dry:      false        　　　　　　　　　　//启用删除文件
+                root: __dirname + '/../', //根目录
+                verbose: true, //开启在控制台输出信息
+                dry: false //启用删除文件
             }
         )
     ],
-    optimization:{
-        splitChunks:{
-            chunks:'all',
+    optimization: {
+        runtimeChunk: {
+            "name": "manifest"
+        },
+        splitChunks: {
+            chunks: 'all',
             minSize: 30000,
             maxSize: 0,
             minChunks: 1,
@@ -57,17 +64,26 @@ module.exports = merge(baseWebpackConfig,{
             automaticNameDelimiter: '~',
             name: true,
             cacheGroups: {
+                styles: {
+                    test: /\.css$/,
+                    chunks: 'all',
+                    enforce: true
+                },
+                common: {
+                    chunks: "all",
+                    minChunks: 2,
+                    name: 'common',
+                    enforce: true,
+                    priority: 8
+                },
                 vendors: {
                     test: /[\\/]node_modules[\\/]/,
-                    priority: -10
-                },
-                default: {
-                    minChunks: 2,
-                    priority: -20,
-                    reuseExistingChunk: true
+                    chunks: 'initial',
+                    enforce: true,
+                    priority: 10,
                 }
             }
         },
-        minimize:true
+        minimize: true
     }
 });

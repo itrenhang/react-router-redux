@@ -1,12 +1,17 @@
-var path = require('path')
-var express = require('express')
-var webpack = require('webpack')
+const path = require('path')
+const express = require('express')
+const webpack = require('webpack')
+const proxyMiddleware = require('http-proxy-middleware')
+const webpackDevMiddleware = require('webpack-dev-middleware')
+const webpackHotMiddleware = require('webpack-hot-middleware')
+const merge = require('webpack-merge');//合并配置
+var webpackConfigDev = require('./webpack.dev.conf')
 
-var proxyMiddleware = require('http-proxy-middleware')
-var webpackDevMiddleware = require('webpack-dev-middleware')
-var webpackHotMiddleware = require('webpack-hot-middleware')
-
-var webpackConfig = require('./webpack.dev.conf')
+var webpackConfig = merge(webpackConfigDev,{
+    plugins:[
+        new webpack.HotModuleReplacementPlugin(),        
+    ]
+})
 
 var server = express()
 var compiler = webpack(webpackConfig)
@@ -33,7 +38,7 @@ server.use(devMiddleware)
 
 server.use(hotMiddleware)
 
-let DIST_DIR = path.join(__dirname, "../build/"),
+let DIST_DIR = path.join(__dirname, "../src/"),
     PORT = 3000;
     // 静态资源地址
 server.use(express.static(DIST_DIR))

@@ -29,6 +29,7 @@ class Login extends React.Component {
   }
   login() {
     let { history } = this.props;
+    console.log(this.props)
     if(this.state.username&&this.state.password){
       this.props.LOGIN(history)
     }

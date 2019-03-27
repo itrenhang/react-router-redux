@@ -1,55 +1,117 @@
 import React from 'react';
-import {Switch, Link,withRouter} from "react-router-dom"
+import { Link } from "react-router-dom"
 import { connect } from 'react-redux';
 import './index.css'
-
+import { Icon, Button, Layout } from 'antd';
+import NbTabList from './tabList.jsx';
+import NbMenuList from './menuList.jsx';
+import img1 from '../../static/images/logo.png';
+const {
+    Header, Content, Footer, Sider,
+} = Layout;
 class Index extends React.Component {
-    constructor(props,context){
-        super(props,context)
+    constructor(props, context) {
+        super(props, context);
+        this.selectTab = this.selectTab.bind(this);
+        this.selectMenu = this.selectMenu.bind(this);
     }
-    lishFn(){
-        let data = this.state.list;
-        const arr = [];
-        data.map((item,index)=>{
-            arr.push(
-                <div>
-                    {item}
-                </div>
-            )
-        })
-        return arr
+    state = {
+        collapsed: false,
+        listData:{},
+        tabActiveKey:null
+    };
+    // 切换menu导航收起展开状态
+    toggle = () => {
+        this.setState({
+            collapsed: !this.state.collapsed
+        });
+    }
+    // menu导航选中状态
+    selectMenu(key,item) {
+        this.setState({
+            listData: Object.assign(this.state.listData, item),
+            tabActiveKey: key
+        });
+    }
+    // 子组件tab选择
+    selectTab(type, activeKey) {
+        switch (type) {
+            case 'switch':
+                this.setState({
+                    tabActiveKey: activeKey
+                });
+                break;
+            case 'remove':
+                let listDate = this.state.listData;
+                delete listDate[activeKey];
+                let keyList = Object.keys(listDate);
+                this.setState({
+                    listData: listDate,
+                    tabActiveKey: keyList[keyList.length-1]
+                });
+                break;
+            default:
+                break;
+        }
     }
     render() {
         return (
             <div className="back">
-                <h1 className="title">react+react-router Example</h1>
-                {!this.props.isLogin?
-                <Link to={'/login'}>登录</Link>
-                :
-                <span>登录成功</span>
-                }
-                <br/>
-                <Link to={'/modify'}>设置</Link>
+                <Layout>
+                    <Sider style={{
+                        overflow: 'auto', height: '100vh', position: 'fixed', left: 0,
+                    }}
+                        trigger={null}
+                        collapsible
+                        collapsed={this.state.collapsed}
+                    >
+                        <div className="logo icon-nb_pc">
+                            <Link to="/">
+                                <img src={img1} alt="" style={{ width: '100px' }} />
+                            </Link>
+                        </div>
+                        <div className="logoSeize" />
+                        <NbMenuList selectMenu={this.selectMenu} tabActiveKey={this.state.tabActiveKey}></NbMenuList>
+                    </Sider>
+                    <Layout style={{ marginLeft: this.state.collapsed ? 80 : 200 }}>
+                        <Header style={{ background: '#001529', padding: 0, height: "40px", position: 'fixed', width: "100%", lineHeight: '40px',zIndex:9999 }}>
+                            <Icon
+                                className="trigger"
+                                type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                                onClick={this.toggle}
+                            />
+                        </Header>
+                        <div style={{ height: "40px" }}></div>
+                        <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
+                            <div style={{ padding: 24, background: '#fff', minHeight: '100vh' }}>
+                                <NbTabList
+                                    listData={this.state.listData}
+                                    tabActiveKey={this.state.tabActiveKey}
+                                    onChange={this.selectTab}
+                                >
+                                </NbTabList>
+                            </div>
+                        </Content>
+                        <Footer style={{ textAlign: 'center' }}>
+                            Ant Design ©2018 Created by Ant UED
+                        </Footer>
+                    </Layout>
+                </Layout>
             </div>
         )
     }
 }
-
 // 哪些 Redux 全局的 state 是我们组件想要通过 props 获取的？
 function mapStateToProps(state) {
-	return {
-		isLogin: state.isLogin
-	};
+    return {
+        isLogin: state.isLogin
+    };
 }
-
 // 哪些 action 创建函数是我们想要通过 props 获取的？
 function mapDispatchToProps(dispatch) {
-	return {};
+    return {};
 }
-
 // 封装传递state和dispatch
-var IndexReactRedux = connect(mapStateToProps,mapDispatchToProps)(Index);
-
-
+var IndexReactRedux = connect(mapStateToProps, mapDispatchToProps)(Index);
 //导出组件
 export default IndexReactRedux;
