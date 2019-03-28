@@ -6,10 +6,10 @@ import rootRedux from './src/store'
 import { HashRouter,Route,Switch,Redirect} from "react-router-dom";
 // import { HashRouter as Router, Route, NavLink, Switch } from "react-router-dom";
 import './src/static/css/app.css';
-import IndexContainer from './src/pages/index/index.jsx';
+import IndexContainer from './src/pages/index/index';
  // LocaleProvider  国际化
-import { LocaleProvider } from 'antd';
-import zhCN from 'antd/lib/locale-provider/zh_CN';
+// import { LocaleProvider } from 'antd';
+// import zhCN from 'antd/lib/locale-provider/zh_CN';
 //创建状态树和设置
 
 //生成状态树对象
@@ -19,7 +19,7 @@ class Main extends React.Component {
     render() {
         return (
             <Switch>
-                <Route  path='/index' component={IndexContainer} />
+                <Route exact path='/index' component={IndexContainer} />
                 <Redirect to="/index" />
             </Switch>
         )
@@ -27,13 +27,13 @@ class Main extends React.Component {
 };
 
 ReactDOM.render(
-    <LocaleProvider locale={zhCN}>
+    // <LocaleProvider locale={zhCN}>
         <Provider store={store}>
             <HashRouter>
                 <Main />
             </HashRouter>
         </Provider>
-    </LocaleProvider>
+    // </LocaleProvider>
     , document.getElementById("app"));
 
 if (module.hot) {

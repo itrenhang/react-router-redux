@@ -1,10 +1,10 @@
 import React from 'react';
 import Loadable from 'react-loadable';
-
+import Loading from '../pages/loading/loading'
 //通用的过场组件
 const loadingComponent =()=>{
     return (
-        <div>loading</div>
+        <Loading />
     ) 
 }
 

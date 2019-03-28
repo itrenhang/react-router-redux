@@ -68,5 +68,8 @@ module.exports = {
                 algorithm: 'top-down'
             }
         })
-    ]
+    ],
+    resolve:{
+        extensions:['.js','.jsx','.json']
+    }
 };

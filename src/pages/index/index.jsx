@@ -17,8 +17,8 @@ class Index extends React.Component {
     }
     state = {
         collapsed: false,
-        listData:{},
-        tabActiveKey:null
+        listData: {},
+        tabActiveKey: null
     };
     // 切换menu导航收起展开状态
     toggle = () => {
@@ -27,7 +27,7 @@ class Index extends React.Component {
         });
     }
     // menu导航选中状态
-    selectMenu(key,item) {
+    selectMenu(key, item) {
         this.setState({
             listData: Object.assign(this.state.listData, item),
             tabActiveKey: key
@@ -47,7 +47,7 @@ class Index extends React.Component {
                 let keyList = Object.keys(listDate);
                 this.setState({
                     listData: listDate,
-                    tabActiveKey: keyList[keyList.length-1]
+                    tabActiveKey: keyList[keyList.length - 1]
                 });
                 break;
             default:
@@ -59,13 +59,13 @@ class Index extends React.Component {
             <div className="back">
                 <Layout>
                     <Sider style={{
-                        overflow: 'auto', height: '100vh', position: 'fixed', left: 0,
+                        overflow: 'auto', height: '100vh', position: 'fixed', left: 0,zIndex:100
                     }}
                         trigger={null}
                         collapsible
                         collapsed={this.state.collapsed}
                     >
-                        <div className="logo icon-nb_pc">
+                        <div className="logo" style={{ width: this.state.collapsed ? 80 : 200 }}>
                             <Link to="/">
                                 <img src={img1} alt="" style={{ width: '100px' }} />
                             </Link>
@@ -74,12 +74,24 @@ class Index extends React.Component {
                         <NbMenuList selectMenu={this.selectMenu} tabActiveKey={this.state.tabActiveKey}></NbMenuList>
                     </Sider>
                     <Layout style={{ marginLeft: this.state.collapsed ? 80 : 200 }}>
-                        <Header style={{ background: '#001529', padding: 0, height: "40px", position: 'fixed', width: "100%", lineHeight: '40px',zIndex:9999 }}>
-                            <Icon
-                                className="trigger"
-                                type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                                onClick={this.toggle}
-                            />
+                        <Header className="con_Header" style={{ paddingLeft: this.state.collapsed ? 80 : 200 }}>
+                            <div className="NBHeaderFlex lrflex">
+                                <div className="NBHeaderFlex">
+                                    <Icon
+                                        className="trigger"
+                                        type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                                        onClick={this.toggle}
+                                    />
+                                    <div className="NBHeaderFlex">
+                                        <p>姓名：刘丽</p>
+                                        <p>职位：销售</p>
+                                    </div>
+                                </div>
+                                <div className="NBHeaderFlex">
+                                    <p>修改密码</p>
+                                    <p>退出</p>
+                                </div>
+                            </div>
                         </Header>
                         <div style={{ height: "40px" }}></div>
                         <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
@@ -93,7 +105,7 @@ class Index extends React.Component {
                             </div>
                         </Content>
                         <Footer style={{ textAlign: 'center' }}>
-                            Ant Design ©2018 Created by Ant UED
+                            nobook
                         </Footer>
                     </Layout>
                 </Layout>
