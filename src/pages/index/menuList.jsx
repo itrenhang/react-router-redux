@@ -3,13 +3,16 @@ import { Menu, Icon } from 'antd';
 import routers from '../../router/routerList.js';
 import { getRouterHash } from '../../utils/getRouterHash';
 const SubMenu = Menu.SubMenu;
+const HashRouters = getRouterHash(routers)
 class NbMenuList extends React.Component {
     constructor(props, context) {
         super(props, context);
+        let pathKey = props.pathTo ? HashRouters[props.pathTo] ? props.pathTo : '404' : routers[0].path;
         this.selectMenu({ key: routers[0].path });
+        this.selectMenu({ key: pathKey });
     }
     state = {
-        routerHash: getRouterHash(routers)
+        routerHash: HashRouters
     }
     // menu导航选中状态
     selectMenu(item, isInfo) {
@@ -19,9 +22,13 @@ class NbMenuList extends React.Component {
     // 获取menu导航菜单列表
     getList() {
         if (!routers) return false;
-        return routers.map((route, index) => {
+        let menuList = [];
+        for (let route of routers) {
+            if(route.hidden){
+                continue;
+            }
             if (route.children) {
-                return (<SubMenu
+                menuList.push(<SubMenu
                     key={route.path}
                     title={<span><Icon type={route.icon} /><span>{route.name}</span></span>}
                 >
@@ -34,12 +41,13 @@ class NbMenuList extends React.Component {
                     })}
                 </SubMenu>)
             } else {
-                return (<Menu.Item key={route.path}>
+                menuList.push(<Menu.Item key={route.path}>
                     <Icon type={route.icon} />
                     <span className="nav-text">{route.name}</span>
                 </Menu.Item>)
             }
-        })
+        }
+        return menuList;
     }
     render() {
         return (

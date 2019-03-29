@@ -19,7 +19,7 @@ class Main extends React.Component {
     render() {
         return (
             <Switch>
-                <Route exact path='/index' component={IndexContainer} />
+                <Route exact path='/:name' component={IndexContainer} />
                 <Redirect to="/index" />
             </Switch>
         )

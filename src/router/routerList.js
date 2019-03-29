@@ -19,11 +19,19 @@ let routers = [
             {
                 path:'aa',
                 exact:true,
-                component:loadable(()=>import('../pages/loading/loading')),
+                component:loadable(()=>import('../pages/modify/modify')),
                 icon:'user',
-                name:'首页'
+                name:'aa'
             }
         ]
+    },
+    {
+        path:'404',
+        exact:true,
+        component:loadable(()=>import('../pages/errTemplate/errTemplate')),
+        icon:'user',
+        name:'404',
+        hidden:true,
     }
 ];
 export default routers;

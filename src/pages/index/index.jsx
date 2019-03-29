@@ -32,6 +32,7 @@ class Index extends React.Component {
             listData: Object.assign(this.state.listData, item),
             tabActiveKey: key
         });
+        console.log(this.state.listData)
     }
     // 子组件tab选择
     selectTab(type, activeKey) {
@@ -71,7 +72,11 @@ class Index extends React.Component {
                             </Link>
                         </div>
                         <div className="logoSeize" />
-                        <NbMenuList selectMenu={this.selectMenu} tabActiveKey={this.state.tabActiveKey}></NbMenuList>
+                        <NbMenuList 
+                            selectMenu={this.selectMenu} 
+                            tabActiveKey={this.state.tabActiveKey}
+                            pathTo={this.props.match.params.name}
+                        ></NbMenuList>
                     </Sider>
                     <Layout style={{ marginLeft: this.state.collapsed ? 80 : 200 }}>
                         <Header className="con_Header" style={{ paddingLeft: this.state.collapsed ? 80 : 200 }}>
