@@ -1,0 +1,50 @@
+.logo,
+.logoSeize {
+    height: 40px;
+    width: 200px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.logo {
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+}
+
+.con_Header {
+    background: #001529;
+    padding: 0;
+    height: 40px;
+    position: fixed;
+    width: 100%;
+    line-height: 40px;
+    z-index: 99;
+    left: 0;
+    color: #fff;
+}
+.con_Header p{
+    margin:0 10px 0;
+    cursor: pointer;
+}
+.NBHeaderFlex{
+    display: flex;
+    height: 40px;
+}
+.lrflex{
+    justify-content: space-between;
+    padding-right: 24px;
+}
+.trigger {
+    font-size: 18px;
+    line-height: 40px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color .3s;
+}
+
+.trigger:hover {
+    color: #1890ff;
+}

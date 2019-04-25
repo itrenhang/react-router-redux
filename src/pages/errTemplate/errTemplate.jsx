@@ -1,5 +1,5 @@
 import React from 'react';
-import './errTemplate.css';
+import './errTemplate.scss';
 import { Spin } from 'antd';
 class ErrTemplate extends React.Component {
     constructor(props, context) {

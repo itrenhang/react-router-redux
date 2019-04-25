@@ -22,6 +22,14 @@ let routers = [
                 component:loadable(()=>import('../pages/modify/modify')),
                 icon:'user',
                 name:'aa'
+            },
+            {
+                path:'addingAgents',
+                exact:true,
+                component:loadable(()=>import('../pages/addingAgents/addingAgents')),
+                icon:'user',
+                name:'添加代理商'
+
             }
         ]
     },

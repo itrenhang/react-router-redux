@@ -33,7 +33,7 @@ module.exports = {
                             name: 'static/images/[name].[ext]'
                         }
                     },
-                    'image-webpack-loader'
+                    // 'image-webpack-loader'
                 ]
             },
             {

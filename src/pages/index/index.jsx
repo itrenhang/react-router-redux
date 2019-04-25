@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom"
 import { connect } from 'react-redux';
-import './index.css'
+import './index.scss'
 import { Icon, Button, Layout } from 'antd';
 import NbTabList from './tabList.jsx';
 import NbMenuList from './menuList.jsx';
