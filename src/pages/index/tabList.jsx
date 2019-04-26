@@ -1,5 +1,6 @@
 import React from 'react';
-import { Route, Switch, Link } from "react-router-dom"
+import { connect } from 'react-redux';
+import { withRouter} from "react-router-dom";
 import { Tabs } from 'antd';
 const TabPane = Tabs.TabPane;
 class NbTabList extends React.Component {
@@ -7,11 +8,11 @@ class NbTabList extends React.Component {
         super(props, context);
     }
     onChange = (activeKey) => {
-        this.props.onChange('switch',activeKey)
+        this.props.onChange('switch', activeKey)
     }
 
     onEdit = (targetKey, action) => {
-        this.props.onChange(action,targetKey)
+        this.props.onChange(action, targetKey)
     }
 
     getTabList() {
@@ -41,4 +42,20 @@ class NbTabList extends React.Component {
         );
     }
 }
-export default NbTabList;
+
+function mapStateToProps(state) {
+    return {
+        listData: state.listData
+    }
+}
+function mapDispatchToProps(dispatch) {
+    return {
+       
+    }
+}
+
+//封装传递state和dispatch
+var NbTabListRedux = connect(mapStateToProps, mapDispatchToProps)(NbTabList);
+
+//导出组件
+export default withRouter(NbTabListRedux);

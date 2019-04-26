@@ -77,8 +77,6 @@ class Addcontact extends React.Component {
       <div>
         <div className='ant-form-item-control-wrapper ant-col-xs-20 ant-col-sm-24 addinvoice' type="primary" onClick={this.showModal}>
           <Icon type="plus" /><span>添加</span>
-
-
         </div>
 
         <Modal

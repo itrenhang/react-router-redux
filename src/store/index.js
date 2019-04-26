@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
-import isLogin from './rootRedux.js';
-import modifyRedux from '../pages/modify/modifyRedux.js';
+import listData from './listData.js';
+import tabActiveKey from './tabActiveKey.js';
 const allReducers = {
-  isLogin,
-  modifyRedux
+  listData,
+  tabActiveKey
 }
 
 const rootReducer = combineReducers(allReducers);

@@ -3,7 +3,7 @@ import loadable from './loadable';
 
 let routers = [
     {
-        path:'login',
+        path:'index',
         exact:true,
         component:loadable(()=>import('../pages/login/login')),
         icon:'user',
@@ -12,17 +12,10 @@ let routers = [
     },
     {
         path:'modify',
-        component:loadable(()=>import('../pages/modify/modify')),
+        component:loadable(()=>import('../pages/addingAgents/addingAgents')),
         icon:'video-camera',
-        name:'第一页',
+        name:'代理商',
         children:[
-            {
-                path:'aa',
-                exact:true,
-                component:loadable(()=>import('../pages/modify/modify')),
-                icon:'user',
-                name:'aa'
-            },
             {
                 path:'addingAgents',
                 exact:true,

@@ -1,22 +1,45 @@
 import React from 'react';
-import { Modal, Button, Icon, Form, Input, Tooltip, Cascader, Select, Row, Col, Checkbox, AutoComplete,Radio,message  } from 'antd';
+import { Modal, Button, Icon, Form, Input, Tooltip, Cascader, Select, Row, Col, Checkbox, AutoComplete, Radio, message, Upload } from 'antd';
 
 const { Option } = Select;
 const AutoCompleteOption = AutoComplete.Option;
-
+const uploadImg = {
+  name: 'Content-Type',// 发到后台的文件参数名
+  action: 'http//admin.nobook.cc/v1/upload/img',//上传的地址
+  accept:'.png,.jpg',
+  headers: {
+    'Content-Type': 'authorization-text',
+  },
+  onChange(info) {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  },
+};
 
 
 class Addinvoice extends React.Component {
 
-  constructor() {
-    super()
-  }
-  state = {
-    loading: false,
-    visible: false,
-    confirmDirty: false,
-    autoCompleteResult: [],
-    // radioValue:1,// 纳税人规模 1是一般纳税人 2是小规模纳税人
+  constructor(props) {
+    super(props)
+    this.state = {
+      loading: false,
+      visible: false,
+      confirmDirty: false,
+      autoCompleteResult: [],
+      taxpayerType: '1', // 纳税人类型 1是一般纳税人 2是小规模纳税人
+      institutionalCode: '', // 统一机构代码
+      invoiceTitle: '', // 开票抬头
+      bank: '', // 开户银行
+      name: '', // 开户姓名
+      bankAccount: '', // 银行账户
+    }
+
   }
 
   showModal = () => {
@@ -26,17 +49,25 @@ class Addinvoice extends React.Component {
   }
   //确定
   handleOk = (e) => {
-    console.log(4)
+    let invoiceForm = {
+      taxpayerType: this.state.taxpayerType,
+      institutionalCode: this.state.institutionalCode,
+      invoiceTitle: this.state.invoiceTitle,
+      bank: this.state.bank,
+      name: this.state.name,
+      bankAccount: this.state.bankAccount,
+    };
     e.preventDefault();
-    this.setState({ loading: true });
+    
+
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        setTimeout(() => {
-          this.setState({ loading: false, visible: false });
-          message.success('添加成功')
-        }, 1000);
+        this.setState({ loading: true });
+    this.props.getChildData(invoiceForm)
+    this.setState({ loading: false ,visible:false });
       }else{
+        
         this.setState({ loading: false });
       }
     });
@@ -65,7 +96,7 @@ class Addinvoice extends React.Component {
   }
 
 
-  
+
   // 纳税人规模选择
   radioChange = (e) => {
     console.log('radio checked', e.target.value);
@@ -108,11 +139,19 @@ class Addinvoice extends React.Component {
                 </Button>,
           ]}
         >
-          <Form {...formItemLayout} onSubmit={this.handleSubmit} className="agent-form" labelAlign="left" style={{paddingTop:'0'}}>
+          <Form {...formItemLayout} onSubmit={this.handleSubmit} className="agent-form" labelAlign="left" style={{ paddingTop: '0' }}>
 
-          <Form.Item>
+            <Form.Item>
               {getFieldDecorator('taxpayerSize', {
                 initialValue: '1',
+                getValueFromEvent: e => {
+                  this.setState({
+
+                    taxpayerType: e.target.value
+
+                  })
+                  return e.target.value
+                }
               })(
                 <Radio.Group>
                   <Radio value='1'>一般纳税人</Radio>
@@ -128,6 +167,13 @@ class Addinvoice extends React.Component {
                   {
                     required: true, message: '请输入统一机构代码', len: 9
                   }],
+                getValueFromEvent: e => {
+                  this.setState({
+                    institutionalCode: e.target.value
+
+                  })
+                  return e.target.value
+                }
               })(
                 <Input placeholder="统一机构代码" />
               )}
@@ -141,6 +187,12 @@ class Addinvoice extends React.Component {
                   {
                     required: true, message: '请输入发票抬头',
                   }],
+                getValueFromEvent: e => {
+                  this.setState({
+                    invoiceTitle: e.target.value
+                  })
+                  return e.target.value
+                }
               })(
                 <Input placeholder="开票抬头" />
               )}
@@ -153,6 +205,12 @@ class Addinvoice extends React.Component {
                   {
                     required: true, message: '请输入银行名称',
                   }],
+                getValueFromEvent: e => {
+                  this.setState({
+                    bank: e.target.value
+                  })
+                  return e.target.value
+                }
               })(
                 <Input placeholder="开户银行" />
               )}
@@ -165,6 +223,12 @@ class Addinvoice extends React.Component {
                   {
                     required: true, message: '请输入开户名称', max: 16, min: 2
                   }],
+                getValueFromEvent: e => {
+                  this.setState({
+                    name: e.target.value
+                  })
+                  return e.target.value
+                }
               })(
                 <Input placeholder="开户名称" />
               )}
@@ -177,6 +241,15 @@ class Addinvoice extends React.Component {
                   {
                     required: true, message: '请输入银行账户',
                   }],
+                getValueFromEvent: e => {
+                  console.log(111)
+                  this.setState({
+                    bankAccount: e.target.value
+                  })
+                  console.log(this.state.bankAccount)
+                  return e.target.value
+                }
+
               })(
                 <Input placeholder="银行账户" />
               )}
@@ -184,7 +257,11 @@ class Addinvoice extends React.Component {
             <Form.Item
               label="纳税人证明"
             >
-              <a href="#">上传</a>
+              <Upload {...uploadImg}>
+                <Button>
+                  <Icon type="upload" /> 上传
+                </Button>
+              </Upload>
             </Form.Item>
 
           </Form>
@@ -193,7 +270,9 @@ class Addinvoice extends React.Component {
     );
   }
 
-
+  componentDidUpdate() {
+    // console.log(this.state);
+  }
 
 
 }

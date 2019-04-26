@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from "react-router-dom"
 import { connect } from 'react-redux';
+import { withRouter} from "react-router-dom";
 import './index.scss'
-import { Icon, Button, Layout } from 'antd';
+import { Icon, Layout } from 'antd';
 import NbTabList from './tabList.jsx';
 import NbMenuList from './menuList.jsx';
 import img1 from '../../static/images/logo.png';
@@ -17,8 +18,6 @@ class Index extends React.Component {
     }
     state = {
         collapsed: false,
-        listData: {},
-        tabActiveKey: null
     };
     // 切换menu导航收起展开状态
     toggle = () => {
@@ -28,28 +27,21 @@ class Index extends React.Component {
     }
     // menu导航选中状态
     selectMenu(key, item) {
-        this.setState({
-            listData: Object.assign(this.state.listData, item),
-            tabActiveKey: key
-        });
-        console.log(this.state.listData)
+        this.props.ADDTABS(item);
+        this.props.SETTABKEY(key,this.props.history);
     }
     // 子组件tab选择
     selectTab(type, activeKey) {
         switch (type) {
             case 'switch':
-                this.setState({
-                    tabActiveKey: activeKey
-                });
+                this.props.SETTABKEY(activeKey,this.props.history);
                 break;
             case 'remove':
-                let listDate = this.state.listData;
-                delete listDate[activeKey];
+                this.props.REMOVETABS(activeKey);
+                let listDate = this.props.listData;
                 let keyList = Object.keys(listDate);
-                this.setState({
-                    listData: listDate,
-                    tabActiveKey: keyList[keyList.length - 1]
-                });
+                let key = keyList[keyList.length - 1];
+                this.props.SETTABKEY(key,this.props.history);
                 break;
             default:
                 break;
@@ -60,7 +52,7 @@ class Index extends React.Component {
             <div className="back">
                 <Layout>
                     <Sider style={{
-                        overflow: 'auto', height: '100vh', position: 'fixed', left: 0,zIndex:100
+                        overflow: 'auto', height: '100vh', position: 'fixed', left: 0, zIndex: 100
                     }}
                         trigger={null}
                         collapsible
@@ -72,9 +64,9 @@ class Index extends React.Component {
                             </Link>
                         </div>
                         <div className="logoSeize" />
-                        <NbMenuList 
-                            selectMenu={this.selectMenu} 
-                            tabActiveKey={this.state.tabActiveKey}
+                        <NbMenuList
+                            selectMenu={this.selectMenu}
+                            tabActiveKey={this.props.tabActiveKey.path}
                             pathTo={this.props.match.params.name}
                         ></NbMenuList>
                     </Sider>
@@ -102,8 +94,7 @@ class Index extends React.Component {
                         <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
                             <div style={{ padding: 24, background: '#fff', minHeight: '100vh' }}>
                                 <NbTabList
-                                    listData={this.state.listData}
-                                    tabActiveKey={this.state.tabActiveKey}
+                                    tabActiveKey={this.props.tabActiveKey.path}
                                     onChange={this.selectTab}
                                 >
                                 </NbTabList>
@@ -121,14 +112,25 @@ class Index extends React.Component {
 // 哪些 Redux 全局的 state 是我们组件想要通过 props 获取的？
 function mapStateToProps(state) {
     return {
-        isLogin: state.isLogin
+        listData: state.listData,
+        tabActiveKey:state.tabActiveKey
     };
 }
 // 哪些 action 创建函数是我们想要通过 props 获取的？
 function mapDispatchToProps(dispatch) {
-    return {};
+    return {
+        REMOVETABS: function (key) {
+            dispatch({ type: 'REMOVETABS', key:key })
+        },
+        ADDTABS: function (data) {
+            dispatch({ type: 'ADDTABS', item:data })
+        },
+        SETTABKEY: function (path,history) {
+            dispatch({ type: 'SETTABKEY', path:path,history:history })
+        }
+    };
 }
 // 封装传递state和dispatch
 var IndexReactRedux = connect(mapStateToProps, mapDispatchToProps)(Index);
 //导出组件
-export default IndexReactRedux;
+export default withRouter(IndexReactRedux);

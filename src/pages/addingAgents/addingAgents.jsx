@@ -12,15 +12,13 @@ class AddingAgents extends React.Component {
         return (
             <div>
                 <Steps size="small" current={0}>
-                <Step title="1.填写信息" />
-                <Step title="2.成功添加" />
-            </Steps>
-            <AgentForm>
-                
-            </AgentForm>
+                    <Step title="1.填写信息" />
+                    <Step title="2.成功添加" />
+                </Steps>
+                <AgentForm>
+                    
+                </AgentForm>
             </div>
-            
-                
         );
     }
 }
