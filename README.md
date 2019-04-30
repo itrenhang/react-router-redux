@@ -29,9 +29,9 @@ npm install
 * 项目运行
 
 ```
-npm run dev
+npm start
 ```
-* 打开浏览器，输入`localhost:8080`
+* 打开浏览器，输入`localhost:3000`
 
 * 项目打包
 
