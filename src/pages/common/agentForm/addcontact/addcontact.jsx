@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button, Icon, Form, Input, Tooltip, Cascader, Select, Row, Col, Checkbox, AutoComplete,Radio,message  } from 'antd';
+import { Modal, Button, Icon, Form, Input, Tooltip, Cascader, Select, Row, Col, Checkbox, AutoComplete, Radio, message } from 'antd';
 import { number } from 'prop-types';
 
 const { Option } = Select;
@@ -17,6 +17,9 @@ class Addcontact extends React.Component {
     visible: false,
     confirmDirty: false,
     autoCompleteResult: [],
+    contactName: '',//联系人姓名
+    contactPhone: '',//联系人手机号
+    contactPosition: '',//联系人职位
   }
 
   showModal = () => {
@@ -26,17 +29,24 @@ class Addcontact extends React.Component {
   }
   //确定
   handleOk = (e) => {
-    console.log(4)
     e.preventDefault();
     this.setState({ loading: true });
+    let contactForm = { 
+      contactName: this.state.contactName, 
+      contactPhone: this.state.contactPhone, 
+      contactPosition: this.state.contactPosition
+     }
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
-        setTimeout(() => {
-          this.setState({ loading: false, visible: false });
-          message.success('添加成功')
-        }, 1000);
-      }else{
+        this.props.getChildDataContact(contactForm)
+        this.setState({ 
+          loading: false, 
+          visible: false,
+        },()=>{
+          this.props.form.resetFields()
+        });
+
+      } else {
         this.setState({ loading: false });
       }
     });
@@ -46,17 +56,6 @@ class Addcontact extends React.Component {
     console.log(3)
     this.setState({ visible: false });
   }
-
-
-
-
-  handleConfirmBlur = (e) => {
-    console.log(1)
-    const value = e.target.value;
-    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-  }
-
-
 
   render() {
     const { visible, loading } = this.state;
@@ -91,7 +90,7 @@ class Addcontact extends React.Component {
                 </Button>,
           ]}
         >
-          <Form {...formItemLayout} onSubmit={this.handleSubmit} className="agent-form" labelAlign="left" style={{paddingTop:'0'}}>
+          <Form {...formItemLayout} onSubmit={this.handleSubmit} className="agent-form" labelAlign="left" style={{ paddingTop: '0' }}>
 
             <Form.Item
               label="姓名"
@@ -99,8 +98,14 @@ class Addcontact extends React.Component {
               {getFieldDecorator('name', {
                 rules: [
                   {
-                    required: true, message: '请输入姓名', max:16,min:2
+                    required: true, message: '请输入姓名', max: 16, min: 2
                   }],
+                getValueFromEvent: e => {
+                  this.setState({
+                    contactName: e.target.value
+                  })
+                  return e.target.value
+                }
               })(
                 <Input placeholder="姓名" />
               )}
@@ -111,8 +116,14 @@ class Addcontact extends React.Component {
               {getFieldDecorator('position', {
                 rules: [
                   {
-                    required: true, message: '请输入职位', 
+                    required: true, message: '请输入职位',
                   }],
+                getValueFromEvent: e => {
+                  this.setState({
+                    contactPosition: e.target.value
+                  })
+                  return e.target.value
+                }
               })(
                 <Input placeholder="职位" />
               )}
@@ -123,14 +134,20 @@ class Addcontact extends React.Component {
               {getFieldDecorator('phone', {
                 rules: [
                   {
-                    type:'number',required: true, message: '请输入正确手机号码', len: 11
+                    type: 'string', required: true, message: '请输入正确手机号码', len: 11
                   }],
+                getValueFromEvent: e => {
+                  this.setState({
+                    contactPhone: e.target.value
+                  })
+                  return e.target.value;
+                }
               })(
                 <Input placeholder="手机号" />
               )}
             </Form.Item>
 
-            
+
 
           </Form>
         </Modal>

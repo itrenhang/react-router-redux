@@ -65,7 +65,9 @@ class Addinvoice extends React.Component {
         console.log('Received values of form: ', values);
         this.setState({ loading: true });
     this.props.getChildData(invoiceForm)
-    this.setState({ loading: false ,visible:false });
+    this.setState({ loading: false ,visible:false },()=>{
+      this.props.form.resetFields()
+    });
       }else{
         
         this.setState({ loading: false });

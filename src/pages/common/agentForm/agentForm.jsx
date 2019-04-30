@@ -21,10 +21,13 @@ class AgentForm extends React.Component {
       confirmDirty: false, // 确认表单是否符合限制规定
       autoCompleteResult: [],
       invoiceForm: [],//发票信息
-      regionForm1: [],//展示地区信息
+      regionForm1: [],//展示代理地区信息
       saleList: [],//销售人员列表
       productList: [],//代理产品列表
       selectProduct:[],//选中的代理产品
+      contactForm:[],//联系人信息
+      contactForm1:[],//联系人列表展示
+      regionNum:1,//地区展示key
       /*------------------------------*/
       /*-------上传的表单数据----------*/ 
       /*------------------------------*/
@@ -159,18 +162,31 @@ class AgentForm extends React.Component {
   //获取子组件代理地区的数据
   getChildDataRegion = (res) => {
     this.state.regionForm.push(res)
-    let key = { key: this.state.regionForm.length }
+    let key = { key: this.state.regionNum }
     let obj = Object.assign(res, key)
     this.state.regionForm1.push(obj)
     this.setState({
       regionForm: this.state.regionForm,
       regionForm1: this.state.regionForm1,
-
+      regionNum:this.state.regionNum+1
     })
   }
   //获取子组件联系人的数据
   getChildDataContact = (res)=>{
     console.log(res)
+    let _obj = {
+        name: res.contactName,
+        position: res.contactPosition,
+        phone: res.contactPhone,
+    }
+    this.state.contactForm.push(_obj)
+    let key = {key:this.state.contactForm.length}
+    _obj = Object.assign(_obj,key)
+    this.state.contactForm1.push(_obj)
+    this.setState({
+      contactForm:this.state.contactForm,
+      contactForm1:this.state.contactForm1
+    })
   }
 
 
@@ -206,15 +222,17 @@ class AgentForm extends React.Component {
       }
     });
   }
-  formDataChange = (e) => {
-    console.log(e);
-    // this.setState({
-    //   formData:{
-    //     name:e.target.value
-    //   }
-    // })
+  // 删除代理地区
+  deleteRegion=(e,i)=>{
+    let _arr1 =  this.state.regionForm1
+    let _arr =  this.state.regionForm
+    _arr1.splice(i,1)
+    _arr.splice(i,1)
+    this.setState({
+      regionForm1:_arr1,
+      regionForm:_arr
+    })
   }
-
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -330,9 +348,9 @@ class AgentForm extends React.Component {
         title: '操作',
         dataIndex: 'operation',
         key: 'operation',
-        render: (text, record) => (
+        render: (text, record,index) => (
           <span>
-            <a href="javascript:;"><Icon type="delete" /></a>
+            <Icon type="delete" onClick={this.deleteRegion.bind(this,record,index)} />
           </span>
         ),
 
@@ -341,26 +359,7 @@ class AgentForm extends React.Component {
 
 
     // 暂时信息
-    const invoiceData = [
-      {
-        key: 1,
-        institutionalCode: '56494421DFD',
-        invoiceTitle: '北京天堂有限公司',
-        bank: '工商银行',
-        name: '大东',
-        bankAccount: 'CD456454',
-        taxpayerType: '一般纳税人'
-      },
-      {
-        key: 2,
-        institutionalCode: '56494421DFD',
-        invoiceTitle: '北京天堂有限公司',
-        bank: '工商银行',
-        name: '大东',
-        bankAccount: 'CD456454',
-        taxpayerType: '一般纳税人'
-      },
-    ];
+
     const contactData = [
       {
         key: 1,
@@ -370,16 +369,7 @@ class AgentForm extends React.Component {
 
       }
     ]
-    const regionData = [
-      {
-        key: 1,
-        index: '01',
-        province: '北京市',
-        city: '东城区',
-        county: '去去去'
 
-      }
-    ]
 
     return (
       <Form {...formItemLayout} onSubmit={this.handleSubmit} className="agent-form" labelAlign="right"  >
@@ -404,7 +394,7 @@ class AgentForm extends React.Component {
 
 
           })(
-            <Input />
+            <Input style={{width:380}} />
           )}
         </Form.Item>
 
@@ -490,7 +480,7 @@ class AgentForm extends React.Component {
         <Form.Item
           label="联系人"
         >
-          <Table columns={contactColumns} dataSource={contactData} pagination={{ hideOnSinglePage: true }} />
+          <Table columns={contactColumns} dataSource={this.state.contactForm1} pagination={{ hideOnSinglePage: true }} />
 
           <Addcontact getChildDataContact={this.getChildDataContact}></Addcontact>
         </Form.Item>
@@ -550,7 +540,7 @@ class AgentForm extends React.Component {
 
   }
   componentDidUpdate() {
-    // console.log(this.state)
+    console.log(this.state)
     // this.getChildData();
   }
 }
